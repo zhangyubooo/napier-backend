@@ -1,17 +1,20 @@
 """
-Napier's Rod Box — backend for https://zhangyubooo.github.io/napier/
+AI Napier backend for https://zhangyubooo.github.io/napier/
 
-Flow:
-    browser (GitHub Pages)
-        GET  /visitor/<id>   which rods are already in this visitor's box?
-        POST /ask            visitor presents a rod (a question card)
+Current use (51-265 exhibit, Nov 2026): the "Ask Napier" panel on the three
+exhibit screens (rods, promptuary, location arithmetic).
+    browser (GitHub Pages, ?zone=rods|promptuary|location)
+        POST /chat           a preset question id, or a visitor's own question
     --> this Flask app (Render)
-        --> Groq API (the LLM writes Napier's inscription + motto as JSON)
-        --> database (the rod goes into the visitor's box)
+        --> Groq API (the LLM answers as Napier, from persona_chat.md + facts.md + zones.json)
+        --> database (the question and answer are logged anonymously)
+
+Legacy (15-113 Project 2, "Napier's Rod Box"): GET /visitor/<id> and POST /ask
+still work exactly as submitted; the current frontend no longer calls them.
 
 The Groq API key and the database URL live only here, in environment variables.
-Visitors never type free text: they can only send a card number 1–16, so there
-is nothing to inject into the prompt.
+Visitors' own questions are length-capped, cleaned of control characters and
+always sent as a visitor message (never as instructions).
 """
 
 import json
@@ -68,6 +71,23 @@ CARDS = {card["id"]: card for card in json.loads((HERE / "cards.json").read_text
 # The system prompt never changes between requests: persona + fact sheet.
 SYSTEM_PROMPT = PERSONA + "\n\n# FACT SHEET\n\n" + FACTS
 
+# --- Exhibit chat (/chat) ---------------------------------------------------
+CHAT_PERSONA = (HERE / "persona_chat.md").read_text(encoding="utf-8")
+ZONES = {zone["id"]: zone for zone in json.loads((HERE / "zones.json").read_text(encoding="utf-8"))}
+PRESETS = {p["id"]: (zone_id, p) for zone_id, zone in ZONES.items() for p in zone["presets"]}
+
+# Three kiosks in one building share one public IP, so this limit is looser than /ask's.
+CHAT_RATE_LIMIT_REQUESTS = int(os.environ.get("CHAT_RATE_LIMIT_REQUESTS", 30))
+QUESTION_MAX_CHARS = 200     # a visitor's own question
+HISTORY_MAX_TURNS = 6        # earlier messages in this conversation sent back for context
+HISTORY_MAX_CHARS = 500      # per earlier message
+REPLY_MAX_WORDS = 90         # persona asks for 70; this is the hard ceiling
+
+
+def chat_system_prompt(zone):
+    return (CHAT_PERSONA + "\n\n# FACT SHEET\n\n" + FACTS
+            + "\n\n# WHERE THE VISITOR IS STANDING\n\n" + zone["name"] + ". " + zone["where"])
+
 
 # ---------------------------------------------------------------------------
 # 2. App setup
@@ -95,14 +115,15 @@ def error(message, status):
 
 
 _recent_requests = defaultdict(deque)
+_recent_chats = defaultdict(deque)
 
 
-def is_rate_limited(ip):
+def is_rate_limited(ip, log=_recent_requests, limit=RATE_LIMIT_REQUESTS):
     now = time.time()
-    timestamps = _recent_requests[ip]
+    timestamps = log[ip]
     while timestamps and now - timestamps[0] > RATE_LIMIT_WINDOW:
         timestamps.popleft()
-    if len(timestamps) >= RATE_LIMIT_REQUESTS:
+    if len(timestamps) >= limit:
         return True
     timestamps.append(now)
     return False
@@ -228,7 +249,8 @@ def index():
         "endpoints": {
             "GET /health": "wake-up check",
             "GET /visitor/<id>": "rods already in this visitor's box",
-            "POST /ask": "present a rod: {visitor_id, card}",
+            "POST /chat": "exhibit screens: {zone, preset} or {zone, question, history}",
+            "POST /ask": "legacy Rod Box: present a rod: {visitor_id, card}",
         },
     })
 
@@ -310,6 +332,139 @@ def ask():
     })
 
 
+# ---------------------------------------------------------------------------
+# 5. Exhibit chat — "Ask Napier" on the three exhibit screens
+# ---------------------------------------------------------------------------
+
+_CONTROL_CHARS = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
+
+
+def clean_question(value, max_chars):
+    """A visitor's typed text: strip control characters, collapse spaces, cap length."""
+    if not isinstance(value, str):
+        return ""
+    text = _CONTROL_CHARS.sub(" ", value)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text[:max_chars].strip()
+
+
+def clean_history(value):
+    """Earlier turns sent back by the page: [{"role": "visitor"|"napier", "text": "..."}]."""
+    if not isinstance(value, list):
+        return []
+    turns = []
+    for item in value[-HISTORY_MAX_TURNS:]:
+        if not isinstance(item, dict) or item.get("role") not in ("visitor", "napier"):
+            continue
+        text = clean_question(item.get("text"), HISTORY_MAX_CHARS)
+        if text:
+            turns.append({"role": "user" if item["role"] == "visitor" else "assistant", "content": text})
+    return turns
+
+
+def parse_reply(raw):
+    """Find {"reply": "..."} in the model's output. Returns the cleaned reply or None."""
+    if not raw:
+        return None
+    match = re.search(r"\{.*\}", raw, re.DOTALL)
+    if not match:
+        return None
+    try:
+        data = json.loads(match.group(0))
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(data, dict):
+        return None
+    return clean_text(data.get("reply"), REPLY_MAX_WORDS) or None
+
+
+def chat_napier(zone, question, focus, history):
+    """Call the LLM for the exhibit chat. Returns the reply; raises RuntimeError with a visitor-safe message."""
+    if MOCK_AI:
+        return (f"(Mock answer in the {zone['name']} zone.) You asked: {question} "
+                "I confess the ink is not yet dry on this reply, good visitor.")
+
+    user_message = f"The visitor asks: {question}"
+    if focus:
+        user_message += f"\n\n(Exhibit note, not from the visitor — what to draw on: {focus})"
+    user_message += '\n\nReply with the JSON object only: {"reply": "..."}'
+
+    messages = [{"role": "system", "content": chat_system_prompt(zone)}, *history,
+                {"role": "user", "content": user_message}]
+
+    for attempt, json_mode in ((1, True), (2, False)):
+        options = {"response_format": {"type": "json_object"}} if json_mode else {}
+        try:
+            result = client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=messages,
+                temperature=0.5,
+                max_completion_tokens=2048,
+                **options,
+            )
+        except groq.APIStatusError as exc:
+            print(f"Groq API error {exc.status_code} (chat attempt {attempt}): {exc.message}")
+            if exc.status_code == 429:
+                raise RuntimeError("Napier has spoken too much today. Please try again later.")
+            if exc.status_code == 400 and attempt == 1:
+                continue
+            raise RuntimeError("The ink would not flow. Please try again.")
+        except Exception as exc:
+            print(f"Unexpected error calling Groq (chat): {exc!r}")
+            raise RuntimeError("Napier could not be reached. Please try again.")
+
+        reply = parse_reply(result.choices[0].message.content or "")
+        if reply:
+            return reply
+        print(f"Chat attempt {attempt}: unusable reply from model.")
+
+    raise RuntimeError("Napier lost his thread. Please ask again.")
+
+
+@app.post("/chat")
+def chat():
+    if is_rate_limited(request.remote_addr, _recent_chats, CHAT_RATE_LIMIT_REQUESTS):
+        response, status = error("Slowly, good visitor. Wait a moment before the next question.", 429)
+        response.headers["Retry-After"] = str(RATE_LIMIT_WINDOW)
+        return response, status
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return error('Send JSON like {"zone": "rods", "preset": "r1"}.', 400)
+
+    zone = ZONES.get(data.get("zone"))
+    if zone is None:
+        return error("There is no such part of the exhibit.", 400)
+
+    preset_id = data.get("preset")
+    if preset_id is not None:
+        if preset_id not in PRESETS or PRESETS[preset_id][0] != zone["id"]:
+            return error("There is no such question here.", 400)
+        preset = PRESETS[preset_id][1]
+        question, focus = preset["question"], preset["focus"]
+    else:
+        question, focus = clean_question(data.get("question"), QUESTION_MAX_CHARS), None
+        if not question:
+            return error("Ask Napier a question first.", 400)
+
+    if client is None and not MOCK_AI:
+        return error("The server is missing its API key.", 500)
+
+    try:
+        reply = chat_napier(zone, question, focus, clean_history(data.get("history")))
+    except RuntimeError as exc:
+        return error(str(exc), 502)
+
+    try:
+        storage.log_question(zone["id"], preset_id, None if preset_id else question, reply)
+        saved = True
+    except Exception as exc:
+        print(f"Database error logging question: {exc!r}")
+        saved = False
+
+    return jsonify({"zone": zone["id"], "reply": reply, "saved": saved})
+
+
 @app.errorhandler(404)
 def not_found(_):
     return error("Not found.", 404)
@@ -321,7 +476,7 @@ def method_not_allowed(_):
 
 
 # ---------------------------------------------------------------------------
-# 5. Local development: `python app.py` → http://127.0.0.1:5002
+# 6. Local development: `python app.py` → http://127.0.0.1:5002
 #    (5001 is Ask Yubo's backend, so both can run at once.)
 #    On Render, `gunicorn app:app` runs instead and this block is skipped.
 # ---------------------------------------------------------------------------

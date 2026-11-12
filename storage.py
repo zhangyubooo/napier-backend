@@ -1,12 +1,14 @@
 """
 storage.py — everything that touches the database lives here.
 
-Two tables:
+Three tables:
 
-    visitors   one row per browser that has visited
-    rods       one row per (visitor, card) — the rods in that visitor's box
+    visitors   one row per browser that has visited       (legacy Rod Box)
+    rods       one row per (visitor, card)                (legacy Rod Box)
+    questions  one row per question asked on an exhibit screen — anonymous:
+               no visitor id, no IP; preset questions store only their id
 
-app.py never writes SQL itself; it calls the four functions at the bottom.
+app.py never writes SQL itself; it calls the functions at the bottom.
 
 Which database?
 - On Render, DATABASE_URL points at a free Postgres database (Neon), so rods
@@ -78,6 +80,17 @@ rods = Table(
 )
 
 
+questions = Table(
+    "questions", metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("zone", String(20), nullable=False, index=True),   # rods | promptuary | location
+    Column("preset", String(10)),                              # e.g. "r2"; NULL for a typed question
+    Column("question", Text),                                  # only for typed questions
+    Column("reply", Text, nullable=False),
+    Column("created_at", DateTime(timezone=True), default=_now),
+)
+
+
 def init_db():
     """Create the tables if they don't exist yet. Safe to call on every start."""
     metadata.create_all(engine)
@@ -133,3 +146,9 @@ def card_counts():
             select(rods.c.card, func.count()).group_by(rods.c.card)
         ).all()
     return {card: count for card, count in rows}
+
+
+def log_question(zone, preset, question, reply):
+    """Keep an anonymous record of what visitors ask, to improve the exhibit."""
+    with engine.begin() as conn:
+        conn.execute(questions.insert().values(zone=zone, preset=preset, question=question, reply=reply))

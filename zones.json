@@ -1,0 +1,88 @@
+[
+  {
+    "id": "rods",
+    "name": "Napier's rods",
+    "where": "The visitor is at one of the rod stations (rods 2–7): a tall column shaped like a giant Napier's rod, with a square screen in front and a small table below with a tray for three rods, an LED grid under the tray and a display that shows a problem. The screen pages through six steps: Napier's rods (rods 1, 4, 7, 9); one rod, one table (rod 7, row 3: 7 × 3 = 21); line up the number (rods 4, 2, 5 side by side make 425); find the row (425 × 6, row 6 reads 24, 12, 30); add the diagonals (2, 5, 5, 0 → 2550); and 'Your turn' (rods 3, 8, 6), pointing to the rods on the table below. A seventh page shows a 3D model of a real set in its wooden box (sixteen rods on a tray that slides into a case with a sliding lid); visitors double-tap to unpack it and drag the pieces around. On the table, a rod in the right slot lights green and a wrong one blinks amber; when all three are right the multiplier's row lights white, and holding the button for two seconds shows the answer.",
+    "presets": [
+      {
+        "id": "r1",
+        "question": "Why are they called bones?",
+        "focus": "The rods were commonly made of bone, ivory or boxwood, hence 'Napier's bones'. Each face carries one digit's multiplication table, written in squares split by a diagonal."
+      },
+      {
+        "id": "r2",
+        "question": "How do the diagonals work?",
+        "focus": "Each square holds a product with the tens above the diagonal and the units below. Read the row for the multiplier and add along the diagonals (slants) from right to left, carrying. Use the screen's example: 425 × 6, row 6 reads 24, 12, 30, and the diagonals give 2 5 5 0 = 2550."
+      },
+      {
+        "id": "r3",
+        "question": "Can the rods multiply two big numbers?",
+        "focus": "One reading multiplies a many-digit number by ONE digit. For a many-digit multiplier, take one reading per digit and add the results, shifted by place. Do not claim the rods do it in one reading."
+      },
+      {
+        "id": "r4",
+        "question": "Why did you make them?",
+        "focus": "Long multiplication was slow, error-prone drudgery for astronomers, surveyors and merchants; the rods turn it into reading and adding. Rabdologia (1617) published them, the year he died."
+      },
+      {
+        "id": "r5",
+        "question": "Did people really use them?",
+        "focus": "Sets were made for decades after 1617, in boxwood and later brass, and the rods travelled as far as China: Giacomo Rho's Chou Suan (1628) adapted Rabdologia into Chinese. He may speak of this as something he has been told since."
+      }
+    ]
+  },
+  {
+    "id": "promptuary",
+    "name": "The Promptuarium",
+    "where": "The visitor is at rod 15, the promptuary wall: a giant lattice of number strips on the wall and a rack of plates (6, 7, 8 …). The tall screen's steps: 1 pick a plate (the plate for your multiplier, e.g. ×7); 2 lay it across the board (98765 × 7), where its holes, played by light, show only the digits you need; 3 add the diagonals from right to left: 6 9 1 3 5 5 = 691,355. The screen's chat already shows: 'Which plate do I take?' — 'The one with your multiplier on it…' and 'Then what?' — 'Read each diagonal from right to left and add the digits. Carry the 1 when a sum passes 9.'",
+    "presets": [
+      {
+        "id": "p1",
+        "question": "What is a promptuary?",
+        "focus": "Promptuarium means storehouse. It is an upgraded form of the rods described in an appendix to Rabdologia: number strips, perforated mask strips, a board, and a box whose top was the board."
+      },
+      {
+        "id": "p2",
+        "question": "Why do only some squares light up?",
+        "focus": "The plates are cut with triangular holes, so only the digits needed for that multiplier digit show through; the visitor adds them along the diagonal bands. On the wall, light plays the part of the holes: 98765 × 7 = 691,355."
+      },
+      {
+        "id": "p3",
+        "question": "Is it better than the rods?",
+        "focus": "It multiplies a many-digit number by a many-digit number without writing partial results, though some adding in the head remains. But it needs far more pieces and was never widely used; laying out the strips took nearly as long as pen and paper. He can be wry about this."
+      },
+      {
+        "id": "p4",
+        "question": "Does a real one still exist?",
+        "focus": "Only one is known: a small wood cabinet with bone inlays in the National Archaeological Museum of Spain, Madrid, holding rods above and the promptuary's 200 flat and 100 perforated strips in drawers; thought likely to have belonged to the Academy of Mathematics founded by Philip II. He may enjoy that it ended up in Spain."
+      }
+    ]
+  },
+  {
+    "id": "location",
+    "name": "Location arithmetic",
+    "where": "The visitor is at rod 16, the location arithmetic room: an L-shaped floor of squares projected in front of a wall projection. One arm is a row worth 8, 4, 2, 1, the other a column worth 1, 2, 4, 8, and START is the corner square (the values are powers of two; in Napier's letters a = 1, b = 2, c = 4, d = 8 …). Standing still on a square for 5 seconds lights it green. Step 1: people on 8 and 1 in one arm make 9. Step 2: people on 8 and 4 in the other arm make 12. Step 3: someone steps onto START and the wall works out 9 × 12 = 108. Several people play together. The screen's chat already shows: 'How do I pick a number?' — 'Stand still on a square for 5 seconds…' and 'How do I see the answer?' — 'Step onto START…'",
+    "presets": [
+      {
+        "id": "l1",
+        "question": "How can a chessboard count?",
+        "focus": "Each square is worth twice the one before; Napier named them with letters: a = 1, b = 2, c = 4, d = 8, e = 16 … A number is the squares (letters) that add up to it, e.g. 87 = abceg. On this floor the arms are worth 8, 4, 2, 1 and 1, 2, 4, 8."
+      },
+      {
+        "id": "l2",
+        "question": "How does standing on squares multiply?",
+        "focus": "Moving a counter one square doubles it, and two on the same square make one on the next (aa = b, bb = c), so multiplying becomes doubling and adding. The floor game: 9 = 8 + 1, 12 = 8 + 4, and the wall gives 9 × 12 = 108 (= 64 + 32 + 8 + 4)."
+      },
+      {
+        "id": "l3",
+        "question": "Is this the same as binary?",
+        "focus": "In effect yes: one of the earliest uses of binary as an aid to calculation (13 = acd = 1101). Leibniz published on binary with 0 and 1 in 1703, after his time, and binary later became the basis of computers. He should speak of later events as things he has been told, with some pride."
+      },
+      {
+        "id": "l4",
+        "question": "Why did no one use it?",
+        "focus": "He delighted in it (his preface, in translation, calls it more of a lark than a labour), but it was treated as a curiosity: turning numbers into letters and back was more trouble than it saved."
+      }
+    ]
+  }
+]
