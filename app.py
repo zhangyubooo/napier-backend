@@ -84,9 +84,21 @@ HISTORY_MAX_CHARS = 500      # per earlier message
 REPLY_MAX_WORDS = 90         # persona asks for 70; this is the hard ceiling
 
 
-def chat_system_prompt(zone):
-    return (CHAT_PERSONA + "\n\n# FACT SHEET\n\n" + FACTS
-            + "\n\n# WHERE THE VISITOR IS STANDING\n\n" + zone["name"] + ". " + zone["where"])
+def chat_system_prompt(zone, page=None):
+    prompt = (CHAT_PERSONA + "\n\n# FACT SHEET\n\n" + FACTS
+              + "\n\n# WHERE THE VISITOR IS STANDING\n\n" + zone["name"] + ". " + zone["where"])
+    if page:
+        prompt += (f"\n\n# THE PAGE ON THE SCREEN RIGHT NOW\n\nPage {page['page']} of {len(zone['pages'])}: "
+                   f"{page['title']}. What the page shows: {page['screen']}")
+    return prompt
+
+
+def zone_page(zone, number):
+    """The page the visitor is looking at (1-based), or None."""
+    pages = zone.get("pages") or []
+    if isinstance(number, int) and not isinstance(number, bool) and 1 <= number <= len(pages):
+        return pages[number - 1]
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -249,7 +261,7 @@ def index():
         "endpoints": {
             "GET /health": "wake-up check",
             "GET /visitor/<id>": "rods already in this visitor's box",
-            "POST /chat": "exhibit screens: {zone, preset} or {zone, question, history}",
+            "POST /chat": "exhibit screens: {zone, page, preset} or {zone, page, question, history}",
             "POST /ask": "legacy Rod Box: present a rod: {visitor_id, card}",
         },
     })
@@ -378,10 +390,10 @@ def parse_reply(raw):
     return clean_text(data.get("reply"), REPLY_MAX_WORDS) or None
 
 
-def chat_napier(zone, question, focus, history):
+def chat_napier(zone, question, focus, history, page=None):
     """Call the LLM for the exhibit chat. Returns the reply; raises RuntimeError with a visitor-safe message."""
     if MOCK_AI:
-        return (f"(Mock answer in the {zone['name']} zone.) You asked: {question} "
+        return (f"(Mock answer · {zone['name']}.) You asked: {question} "
                 "I confess the ink is not yet dry on this reply, good visitor.")
 
     user_message = f"The visitor asks: {question}"
@@ -389,7 +401,7 @@ def chat_napier(zone, question, focus, history):
         user_message += f"\n\n(Exhibit note, not from the visitor — what to draw on: {focus})"
     user_message += '\n\nReply with the JSON object only: {"reply": "..."}'
 
-    messages = [{"role": "system", "content": chat_system_prompt(zone)}, *history,
+    messages = [{"role": "system", "content": chat_system_prompt(zone, page)}, *history,
                 {"role": "user", "content": user_message}]
 
     for attempt, json_mode in ((1, True), (2, False)):
@@ -436,12 +448,14 @@ def chat():
     if zone is None:
         return error("There is no such part of the exhibit.", 400)
 
+    page = zone_page(zone, data.get("page"))      # optional: which screen page the visitor is on
     preset_id = data.get("preset")
     if preset_id is not None:
         if preset_id not in PRESETS or PRESETS[preset_id][0] != zone["id"]:
             return error("There is no such question here.", 400)
         preset = PRESETS[preset_id][1]
-        question, focus = preset["question"], preset["focus"]
+        question, focus = preset["question"], preset.get("focus")
+        page = page or zone_page(zone, preset.get("page"))
     else:
         question, focus = clean_question(data.get("question"), QUESTION_MAX_CHARS), None
         if not question:
@@ -451,12 +465,13 @@ def chat():
         return error("The server is missing its API key.", 500)
 
     try:
-        reply = chat_napier(zone, question, focus, clean_history(data.get("history")))
+        reply = chat_napier(zone, question, focus, clean_history(data.get("history")), page)
     except RuntimeError as exc:
         return error(str(exc), 502)
 
     try:
-        storage.log_question(zone["id"], preset_id, None if preset_id else question, reply)
+        storage.log_question(zone["id"], preset_id, None if preset_id else question, reply,
+                             page["page"] if page else None)
         saved = True
     except Exception as exc:
         print(f"Database error logging question: {exc!r}")

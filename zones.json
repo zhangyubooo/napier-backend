@@ -29,59 +29,234 @@
         "question": "Did people really use them?",
         "focus": "Sets were made for decades after 1617, in boxwood and later brass, and the rods travelled as far as China: Giacomo Rho's Chou Suan (1628) adapted Rabdologia into Chinese. He may speak of this as something he has been told since."
       }
+    ],
+    "pages": [
+      {
+        "page": 1,
+        "title": "Napier’s Rods",
+        "screen": "rods 1, 4, 7, 9 · multiply with sticks"
+      },
+      {
+        "page": 2,
+        "title": "One rod, one table",
+        "screen": "rod 7 with rows ×1–×9; row 3 highlighted: 7 × 3 = 21"
+      },
+      {
+        "page": 3,
+        "title": "Line up the number",
+        "screen": "rods 4, 2, 5 side by side make 425"
+      },
+      {
+        "page": 4,
+        "title": "Find the row",
+        "screen": "425 × 6: row 6 reads 24, 12, 30"
+      },
+      {
+        "page": 5,
+        "title": "Add the diagonals",
+        "screen": "24 · 12 · 30 → slants give 2 5 5 0 = 2550"
+      },
+      {
+        "page": 6,
+        "title": "Your turn",
+        "screen": "rods 3, 8, 6 · try the rods on the table below"
+      },
+      {
+        "page": 7,
+        "title": "The set in its box",
+        "screen": "3D model of a set: double-tap to unpack, drag the pieces"
+      }
     ]
   },
   {
     "id": "promptuary",
     "name": "The Promptuarium",
-    "where": "The visitor is at rod 15, the promptuary wall: a giant lattice of number strips on the wall and a rack of plates (6, 7, 8 …). The tall screen's steps: 1 pick a plate (the plate for your multiplier, e.g. ×7); 2 lay it across the board (98765 × 7), where its holes, played by light, show only the digits you need; 3 add the diagonals from right to left: 6 9 1 3 5 5 = 691,355. The screen's chat already shows: 'Which plate do I take?' — 'The one with your multiplier on it…' and 'Then what?' — 'Read each diagonal from right to left and add the digits. Carry the 1 when a sum passes 9.'",
+    "where": "The visitor is at rod 15, the promptuary wall, with a tall screen of seven pages beside it. The wall: a number board with 98765 fixed on it (columns 9 8 7 6 5, four rows; every square holds its digit's whole times table in Napier's layout, tens above the slant and units below), and nine black plates ×1 to ×9 on a plate rail. A visitor lifts the plate for a digit of the multiplier and hooks it across a row, tab at the board's left edge; the plate's two windows per square show only that digit's answers. One plate per row, top row first; four rows allow up to a four-digit multiplier. Then the visitor adds the slanted bands from right to left, carrying. Napier's own strips and plates and the Madrid cabinet are on the wall graphic opposite, not on this screen.",
     "presets": [
       {
-        "id": "p1",
-        "question": "What is a promptuary?",
-        "focus": "Promptuarium means storehouse. It is an upgraded form of the rods described in an appendix to Rabdologia: number strips, perforated mask strips, a board, and a box whose top was the board."
+        "id": "ph1",
+        "page": 1,
+        "question": "What does ‘promptuarium’ mean?"
       },
       {
-        "id": "p2",
-        "question": "Why do only some squares light up?",
-        "focus": "The plates are cut with triangular holes, so only the digits needed for that multiplier digit show through; the visitor adds them along the diagonal bands. On the wall, light plays the part of the holes: 98765 × 7 = 691,355."
+        "id": "ph2",
+        "page": 2,
+        "question": "Why two windows in every square?"
       },
       {
-        "id": "p3",
-        "question": "Is it better than the rods?",
-        "focus": "It multiplies a many-digit number by a many-digit number without writing partial results, though some adding in the head remains. But it needs far more pieces and was never widely used; laying out the strips took nearly as long as pen and paper. He can be wry about this."
+        "id": "ph3",
+        "page": 3,
+        "question": "Which plate do I take for × 7?"
       },
       {
-        "id": "p4",
-        "question": "Does a real one still exist?",
-        "focus": "Only one is known: a small wood cabinet with bone inlays in the National Archaeological Museum of Spain, Madrid, holding rods above and the promptuary's 200 flat and 100 perforated strips in drawers; thought likely to have belonged to the Academy of Mathematics founded by Philip II. He may enjoy that it ended up in Spain."
+        "id": "ph4",
+        "page": 4,
+        "question": "Which row should I hang it in?"
+      },
+      {
+        "id": "ph5",
+        "page": 5,
+        "question": "What do I do with a carry?"
+      },
+      {
+        "id": "ph6",
+        "page": 6,
+        "question": "Why do the slants line up across rows?"
+      },
+      {
+        "id": "ph7",
+        "page": 7,
+        "question": "Can you check my answer?"
+      },
+      {
+        "id": "pc1",
+        "question": "What does ‘promptuarium’ mean?"
+      },
+      {
+        "id": "pc2",
+        "question": "How is this different from the rods?"
+      },
+      {
+        "id": "pc3",
+        "question": "Is 691,355 right?"
+      }
+    ],
+    "pages": [
+      {
+        "page": 1,
+        "title": "The Promptuarium",
+        "screen": "Napier’s last invention · Rabdologia, 1617 / plate 7 hung over the number 98765 / Napier’s rods still leave you writing down a partial product for every digit. The promptuarium skips that step. Number strips and window plates are laid across each other, so only the digits you need show through — then you just add. / in Rabdologia, Napier’s last book / partial products to write down / the only sum you do: adding small digits / THE REAL OBJECT / Napier’s own strips and plates, and the rare cabinet in Madrid, are on the wall graphic opposite. This screen shows how to use the number board and black plates. / HOW TO USE THE WALL / Meet the wall / board, plates, rows / Pick a plate / one plate per digit / Hang it across a row / only the answers show / Add along the slants / right to left / Two plates, bigger numbers / 98765 × 73 / Your turn / four challenges"
+      },
+      {
+        "page": 2,
+        "title": "Meet the wall",
+        "screen": "Three parts, all in front of you / PLATE RAIL / four rows / The number board / 98765 is already set, one column per digit. Every square holds that digit’s whole times table, ×0 to ×9: tens above the slant, units below it. / The plates / Nine black plates, ×1 to ×9, hang on the rail beside the board. Each one has two windows per square, cut exactly where its own answer sits. / The rows / Hang one plate per row. One plate multiplies by one digit; with four rows you can multiply by a number up to four digits long. / the 7 square, close up / Where does 7 × 7 live? Its tens digit 4 sits above the slant, its units digit 9 below. Plate 7’s windows open on exactly those two boxes — in every square on the board."
+      },
+      {
+        "page": 3,
+        "title": "Step 1 · Pick a plate",
+        "screen": "One plate for each digit you multiply by / PLATE RAIL / Decide what to multiply 98765 by. For × 7, lift plate 7 off the rail. The digit is printed on the plate’s end tab; hold it by the edges. / WHY ONE PLATE FITS EVERY COLUMN / Napier put each answer in the same place in every square. The 7-times answer is always in these two boxes, so one plate finds it in all five columns at once: 63 56 49 42 35. / PLAN YOUR PLATES / 98765 × 7 / plate 7 / 98765 × 73 / plates 7 and 3, top to bottom / 98765 × 425 / plates 4, 2 and 5, top to bottom"
+      },
+      {
+        "page": 4,
+        "title": "Step 2 · Hang it across",
+        "screen": "Only the 7-times answers stay visible / WHAT YOU SEE THROUGH THE WINDOWS / 9 × 7 / 8 × 7 / 7 × 7 / 6 × 7 / 5 × 7 / Hook plate 7 over the top row with its tab at the left edge. Everything else is covered: no hunting through a times table, no chance of reading the wrong line. / Each column now shows its digit × 7 — the tens digit above the slant, the units digit below. / TIP / Any row works for a single plate; the top row is easiest to reach. For two or more plates, start at the top and fill the rows in order. / IF SOMETHING LOOKS WRONG / Digit on the tab upside down? Turn the plate over — the tab goes on the left. Windows not on the numbers? Slide the plate until its tab sits against the board’s left edge."
+      },
+      {
+        "page": 5,
+        "title": "Step 3 · Add the slants",
+        "screen": "Right to left, one band at a time / 98765 × 7 = 691,355 / READ THE BANDS FROM THE RIGHT / 1st / 2nd / 3 + 2 / 3rd / 4 + 9 / write 3, carry 1 / 4th / 4 + 6 + 1 / write 1, carry 1 / 5th / 5 + 3 + 1 / 6th / WHY IT’S EASY / Each band holds two digits at most, plus a carry — sums small enough for your head. Write each answer digit to the left of the last one. / QUICK CHECK / 98765 is just under 100,000, so × 7 should land just under 700,000. 691,355 fits."
+      },
+      {
+        "page": 6,
+        "title": "Two plates, bigger numbers",
+        "screen": "98765 × 73 · one row per digit / the seven bands, left to right / Hang the plate for the first digit (7) in the top row and the next digit (3) right below it. The slanted bands run straight through both rows, so tens and units line up by themselves — add each band exactly as before. / 1 + 8 + 5 / write 4, carry 1 / 1 + 3 + 1 + 2 + 1 / 2 + 4 + 4 + 9 / write 9, carry 1 / 2 + 4 + 7 + 6 + 1 / write 0, carry 2 / 2 + 5 + 3 + 2 / write 2, carry 1 / 6 + 1 / 98765 × 73 = 7,209,845 / carries are shown inside the sums · four rows = up to four digits"
+      },
+      {
+        "page": 7,
+        "title": "Your turn",
+        "screen": "The plates are on the rail — try these / ONE PLATE / 98765 × 4 / Hang plate 4 in the top row. / answer, upside down: / ONE PLATE / 98765 × 9 / Plate 9. Look at all those eights. / answer, upside down: / TWO PLATES / 98765 × 25 / Plate 2 on top, plate 5 below it. / answer, upside down: / TWO PLATES / 98765 × 12 / Plate 1 on top, plate 2 below it. / answer, upside down: / Stuck on a band? Tap Napier and tell him which digits you can see. When you’re done, hang the plates back on the rail for the next visitor."
       }
     ]
   },
   {
     "id": "location",
     "name": "Location arithmetic",
-    "where": "The visitor is at rod 16, the location arithmetic room: an L-shaped floor of squares projected in front of a wall projection. One arm is a row worth 8, 4, 2, 1, the other a column worth 1, 2, 4, 8, and START is the corner square (the values are powers of two; in Napier's letters a = 1, b = 2, c = 4, d = 8 …). Standing still on a square for 5 seconds lights it green. Step 1: people on 8 and 1 in one arm make 9. Step 2: people on 8 and 4 in the other arm make 12. Step 3: someone steps onto START and the wall works out 9 × 12 = 108. Several people play together. The screen's chat already shows: 'How do I pick a number?' — 'Stand still on a square for 5 seconds…' and 'How do I see the answer?' — 'Step onto START…'",
+    "where": "The visitor is at rod 16, the location arithmetic room, with a tall screen of eight pages. The floor is an L: the near strip worth 8 4 2 1 is the first number, the strip running toward the wall worth 1 2 4 8 is the second number, and START is the corner pad. Standing still on a square for 3 seconds switches it on (green); stepping off and standing there again for 3 seconds switches it off; each square switches once per visit. Standing on START for 3 seconds runs the multiplication: counters appear on the wall board where the two numbers cross, slide down-left along the diagonals to the bottom row and merge (two on one square make one on the next), and the answer flies back to the floor sum (the equation is on the floor, not on the wall). It stays a few seconds, then the floor clears. Each strip makes 1 to 15, so the biggest product is 15 × 15 = 225. Two people can play, one strip each. Napier's letters and the history of binary are on the wall graphics nearby, not on this screen.",
     "presets": [
       {
-        "id": "l1",
-        "question": "How can a chessboard count?",
-        "focus": "Each square is worth twice the one before; Napier named them with letters: a = 1, b = 2, c = 4, d = 8, e = 16 … A number is the squares (letters) that add up to it, e.g. 87 = abceg. On this floor the arms are worth 8, 4, 2, 1 and 1, 2, 4, 8."
+        "id": "lh1",
+        "page": 1,
+        "question": "Why does every square double?"
       },
       {
-        "id": "l2",
-        "question": "How does standing on squares multiply?",
-        "focus": "Moving a counter one square doubles it, and two on the same square make one on the next (aa = b, bb = c), so multiplying becomes doubling and adding. The floor game: 9 = 8 + 1, 12 = 8 + 4, and the wall gives 9 × 12 = 108 (= 64 + 32 + 8 + 4)."
+        "id": "lh2",
+        "page": 2,
+        "question": "How do I make 11?"
       },
       {
-        "id": "l3",
-        "question": "Is this the same as binary?",
-        "focus": "In effect yes: one of the earliest uses of binary as an aid to calculation (13 = acd = 1101). Leibniz published on binary with 0 and 1 in 1703, after his time, and binary later became the basis of computers. He should speak of later events as things he has been told, with some pride."
+        "id": "lh3",
+        "page": 3,
+        "question": "Which strip is my first number?"
       },
       {
-        "id": "l4",
-        "question": "Why did no one use it?",
-        "focus": "He delighted in it (his preface, in translation, calls it more of a lark than a labour), but it was treated as a curiosity: turning numbers into letters and back was more trouble than it saved."
+        "id": "lh4",
+        "page": 4,
+        "question": "How do I switch a square off?"
+      },
+      {
+        "id": "lh5",
+        "page": 5,
+        "question": "Can two people play together?"
+      },
+      {
+        "id": "lh6",
+        "page": 6,
+        "question": "Where does the answer appear?"
+      },
+      {
+        "id": "lh7",
+        "page": 7,
+        "question": "Why do the counters slide diagonally?"
+      },
+      {
+        "id": "lh8",
+        "page": 8,
+        "question": "What’s the biggest answer?"
+      },
+      {
+        "id": "lc1",
+        "question": "How do I switch a square off?"
+      },
+      {
+        "id": "lc2",
+        "question": "What’s the biggest answer?"
+      },
+      {
+        "id": "lc3",
+        "question": "Is this how computers count?"
+      }
+    ],
+    "pages": [
+      {
+        "page": 1,
+        "title": "Location Arithmetic",
+        "screen": "Napier’s chessboard · Rabdologia, 1617 / the wall board working out 9 × 12 / Napier’s third way to calculate needs no times tables at all. Every square on his board is worth double the one beside it. Numbers are made of counters, and multiplying is just sliding them along the diagonals. / — Napier, on his board / 1 2 4 8 / every square doubles / times tables to remember / 3 s / stand still to choose a square / THE STORY / Napier’s letters a, b, c… and how his board became binary are on the wall graphics nearby. This screen shows you how to play the floor. / HOW TO PLAY / How the squares count / 8 + 1 = 9 / Meet the floor / strips, START, wall / Choose your first number / stand 3 seconds / Choose the second / the other strip / Stand on START / watch the wall / Watching the wall / slide and merge / Your turn / four challenges"
+      },
+      {
+        "page": 2,
+        "title": "How the squares count",
+        "screen": "Light the squares that add up to your number / 8 + 1 = 9 / Each strip on the floor has four squares, worth 8, 4, 2 and 1. A number is simply the squares you light, added up. Four squares make every number from 1 to 15 — each in exactly one way. / EVERY NUMBER YOU CAN MAKE / WHY IT DOUBLES / Napier’s rule: two of the same square make one of the next — 1 + 1 = 2, 2 + 2 = 4. So you never need a square twice, and the wall uses the same rule to carry."
+      },
+      {
+        "page": 3,
+        "title": "Meet the floor",
+        "screen": "Two strips, one START pad, and the wall / THE WALL / THE FLOOR, FROM ABOVE / a × b = _ / ↓ you enter from this side ↓ / Near strip — 8 4 2 1. Your first number. / Strip toward the wall — 1 2 4 8. Your second number. / START pad. Stand here to run the multiplication. / The wall board. Counters appear, slide and join up — this is the working. / The floor sum. Your numbers and the answer are written here."
+      },
+      {
+        "page": 4,
+        "title": "Step 1 · First number",
+        "screen": "Stand still on a square for 3 seconds / 3 s / stand still / NEAR STRIP / 9 × _ / the floor sum fills in as you go / Step onto a square on the near strip and stand still. After 3 seconds it fills green — that square is on. / Light as many as you need: 8 and 1 make 9. / Changed your mind? Step off, then stand on the square again for 3 seconds to switch it off. / TRY MAKING / 13 = 8 + 4 + 1 6 = 4 + 2 11 = 8 + 2 + 1 The full list is on page 2."
+      },
+      {
+        "page": 5,
+        "title": "Step 2 · Second number",
+        "screen": "Now the strip that runs toward the wall / 9 × 12 = _ / Do the same on the strip that runs toward the wall: 8 + 4 = 12. / Each square switches once per visit — step off before you choose the next one. / The floor sum now reads 9 × 12 = _. Check it before you go to START. / TWO PLAYERS / Playing with a friend? Take one strip each — then one of you steps onto START."
+      },
+      {
+        "page": 6,
+        "title": "Step 3 · Stand on START",
+        "screen": "Then watch the wall do the multiplying / 9 × 12 = 108 / 3 s / Stand on START for 3 seconds. A light runs from the pad up into the wall board. / Counters appear wherever your two numbers cross on the wall. / They slide down the diagonals to the bottom row and join up. / The answer flies back down to the floor: 9 × 12 = 108. / AFTERWARDS / The answer stays for a few seconds, then the floor clears for the next player."
+      },
+      {
+        "page": 7,
+        "title": "Watching the wall",
+        "screen": "What the counters are doing / 64 + 32 + 8 + 4 = 108 / CROSSING = ROW × COLUMN / Where the 8 row meets the 8 column the square is worth 64; 9 and 12 cross in four places. / SLIDE DOWN-LEFT / One step down halves a square, one step left doubles it — so a counter keeps its value all the way to the bottom row. / TWO MAKE ONE / Two counters on one square become one counter on the next: 4 + 4 = 8. That’s Napier’s carry. Try 6 × 7 to watch it happen. / read the bottom row: every counter is a square you add"
+      },
+      {
+        "page": 8,
+        "title": "Your turn",
+        "screen": "Try these on the floor / 4 + 2 AND 4 + 2 + 1 / 6 × 7 / Watch counters merge on the wall. / answer, upside down: / LIGHT EVERY SQUARE / 15 × 15 / The biggest sum the floor can do. / answer, upside down: / WHICH TWO NUMBERS? / Make 100 / Hint: both numbers are the same. / answer, upside down: / 8 + 4 + 1 AND 1 / 13 × 1 / Why don’t the counters slide? / answer, upside down: / Not sure what you’re seeing on the wall? Tap Napier and ask him."
       }
     ]
   }

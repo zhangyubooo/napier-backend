@@ -16,11 +16,13 @@ a description of the station the visitor is standing at, and logs the question a
 | Endpoint | Purpose |
 |---|---|
 | `GET /health` | Wake-up ping (Render's free tier sleeps) |
-| `POST /chat` `{zone, preset, history?}` or `{zone, question, history?}` | `{zone, reply, saved}` |
+| `POST /chat` `{zone, page?, preset, history?}` or `{zone, page?, question, history?}` | `{zone, reply, saved}` |
 | `GET /visitor/<uuid>` | Legacy Rod Box: `{rods: [{card, inscription, motto}], counts: {"4": 12}}` |
 | `POST /ask` `{visitor_id, card}` | Legacy Rod Box: `{card, inscription, motto, repeat, count, saved}` |
 
-`zone` is `rods`, `promptuary` or `location`; `preset` is a question id from `zones.json` (e.g. `r2`);
+`zone` is `rods`, `promptuary` or `location`; `page` is the screen page the visitor is on (1-based;
+its title and contents from `zones.json` go into Napier's prompt); `preset` is a question id from
+`zones.json` (e.g. `r2`, or `ph3` for rod 15 page 3's hint question);
 `question` is the visitor's own text (cut to 200 characters); `history` is up to 6 earlier messages,
 `[{"role": "visitor" | "napier", "text": "..."}]`.
 
@@ -31,7 +33,7 @@ a description of the station the visitor is standing at, and logs the question a
 | `app.py` | Endpoints, validation, rate limits, prompt building, Groq calls, JSON checking |
 | `storage.py` | Database tables and the operations app.py uses (incl. the anonymous `questions` log) |
 | `persona_chat.md` | System prompt for the exhibit chat: who Napier is, how he speaks, how to treat typed questions, JSON format |
-| `zones.json` | The three stations: what the visitor is looking at, and the suggested questions + what each should draw on. Ids must match the frontend's `js/zones.js` |
+| `zones.json` | The three stations: what the visitor is looking at, each screen page (title + what it shows), and the suggested questions. Ids must match the frontend's `js/zones.js` |
 | `facts.md` | The fact sheet Napier may draw on (with sources) — shared by both versions |
 | `persona.md`, `cards.json` | Legacy Rod Box: persona and the sixteen rods |
 
@@ -62,9 +64,9 @@ which `.gitignore` excludes. Nothing secret is in this repository or in the fron
 
 ## Reading what visitors asked
 
-Every `/chat` question is logged in the `questions` table: zone, preset id (or the typed text),
+Every `/chat` question is logged in the `questions` table: zone, page, preset id (or the typed text),
 Napier's reply and the time. There is no visitor id and no IP. Read it in the Neon console's SQL
-editor, e.g. `select zone, preset, question, reply, created_at from questions order by id desc;`.
+editor, e.g. `select zone, page, preset, question, reply, created_at from questions order by id desc;`.
 Use it to see what people want to know and to catch any wrong answer.
 
 ## Safety

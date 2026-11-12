@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import (
     Column, DateTime, Integer, MetaData, String, Table, Text,
-    UniqueConstraint, create_engine, func, select,
+    UniqueConstraint, create_engine, func, inspect, select, text,
 )
 
 
@@ -84,6 +84,7 @@ questions = Table(
     "questions", metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("zone", String(20), nullable=False, index=True),   # rods | promptuary | location
+    Column("page", Integer),                                   # screen page the visitor was on
     Column("preset", String(10)),                              # e.g. "r2"; NULL for a typed question
     Column("question", Text),                                  # only for typed questions
     Column("reply", Text, nullable=False),
@@ -94,6 +95,12 @@ questions = Table(
 def init_db():
     """Create the tables if they don't exist yet. Safe to call on every start."""
     metadata.create_all(engine)
+    # `questions.page` was added on 2026-11-12, after the table was first created on
+    # Neon: add the column to an older table (create_all never changes existing tables).
+    existing = {c["name"] for c in inspect(engine).get_columns("questions")}
+    if "page" not in existing:
+        with engine.begin() as conn:
+            conn.execute(text("ALTER TABLE questions ADD COLUMN page INTEGER"))
 
 
 # ---------------------------------------------------------------------------
@@ -148,7 +155,7 @@ def card_counts():
     return {card: count for card, count in rows}
 
 
-def log_question(zone, preset, question, reply):
+def log_question(zone, preset, question, reply, page=None):
     """Keep an anonymous record of what visitors ask, to improve the exhibit."""
     with engine.begin() as conn:
-        conn.execute(questions.insert().values(zone=zone, preset=preset, question=question, reply=reply))
+        conn.execute(questions.insert().values(zone=zone, page=page, preset=preset, question=question, reply=reply))

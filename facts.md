@@ -38,7 +38,6 @@ To be checked with the Posner Center before the December exhibit.
 - Napier's example used strips one finger wide and eleven fingers long, enough to multiply two 10-digit numbers into a 20-digit answer.
 - It needs far more pieces than a set of rods, and it was never widely used, perhaps because it was harder to make and laying out the strips took nearly as long as pen and paper.
 - The only known surviving promptuary is in a small cabinet at the National Archaeological Museum of Spain in Madrid. The cabinet is wood with bone inlays; it holds a set of Napier's rods in its upper part, and its drawers hold the promptuary: 200 flat strips and 100 perforated ones (300 pieces in 30 drawers). It is thought likely to have belonged first to the Academy of Mathematics founded by Philip II of Spain, then the Royal Palace and the National Library, before the museum. The historian Erwin Tomash studied it ("The Madrid Promptuary", 1988).
-- In this exhibit the wall shows a plate example: 7 × 98765 = 691,355.
 
 ## Location arithmetic (calculation on a chessboard)
 - The last part of Rabdologia: "location arithmetic as performed on a chessboard".
@@ -49,7 +48,21 @@ To be checked with the Posner Center before the December exhibit.
 - Napier enjoyed it; in a modern English translation his preface calls it more of a lark than a labour.
 - It never caught on and was treated as a curiosity, probably because turning numbers into the letters and back was more trouble than it saved.
 - After his time: Gottfried Leibniz published a paper on binary arithmetic, using only the characters 0 and 1, in the Paris Academy of Sciences volume for 1703. Binary later became the basis of electronic computers from the 1940s onward and of almost all computers today.
-- In this exhibit's floor game, visitors stand on squares: 9 = da (8 + 1) and 12 = dc (8 + 4); then the wall works out 9 × 12 = 108 = cdfg (4 + 8 + 32 + 64).
+
+## The exhibit's promptuary wall (rod 15) — how to use it
+- The number board has 98765 fixed on it: columns 9 8 7 6 5, four rows. Every square holds its digit's whole times table, ×0 to ×9, in Napier's layout: the tens digit above the slant, the units digit below.
+- Nine black plates, ×1 to ×9, hang on the plate rail beside the board. Each plate has its digit on an end tab and two windows per square, cut exactly where that digit's answer sits, so one plate finds its answer in all five columns at once.
+- Hook a plate across a row with its tab at the board's left edge (tab upside down: turn the plate over). Any row works for one plate; for two or more, start at the top row and fill the rows in order, first digit of the multiplier on top. Four rows allow a multiplier of up to four digits.
+- Through plate 7's windows the five columns read 63, 56, 49, 42, 35. Add the slanted bands from right to left, carrying: 5; 3 + 2 = 5; 4 + 9 = 13, write 3 carry 1; 4 + 6 + 1 = 11, write 1 carry 1; 5 + 3 + 1 = 9; 6. So 98765 × 7 = 691,355 (a check: 98765 is just under 100,000, so the answer is just under 700,000).
+- With plates 7 and 3 in the top two rows the bands run straight through both rows: 98765 × 73 = 7,209,845.
+- Challenges on the screen and their answers: 98765 × 4 = 395,060; × 9 = 888,885; × 25 = 2,469,125 (plate 2 on top, plate 5 below); × 12 = 1,185,180 (plate 1 on top, plate 2 below). Plates go back on the rail afterwards.
+
+## The exhibit's floor (rod 16) — how to play
+- The floor is an L. The near strip, worth 8 4 2 1, is the first number; the strip toward the wall, worth 1 2 4 8, is the second number; START is the pad in the corner.
+- Stand still on a square for 3 seconds and it turns green (on). Step off and stand on it again for 3 seconds to switch it off; each square switches once per visit. Light the squares that add up to your number: 8 + 1 = 9, 8 + 4 = 12, 11 = 8 + 2 + 1, 13 = 8 + 4 + 1. Each strip makes every number from 1 to 15, each in exactly one way.
+- Stand on START for 3 seconds: a light runs up into the wall board, counters appear where the two numbers cross (crossing = row × column; the 8 row and 8 column cross at 64), slide down-left along the diagonals to the bottom row (one step down halves, one step left doubles, so a counter keeps its value) and merge: two on one square make one on the next, which is Napier's carry. The answer flies back to the floor sum: 9 × 12 = 108 = 64 + 32 + 8 + 4. The wall shows the working; the equation is on the floor. It stays a few seconds, then the floor clears.
+- Two people can play: one strip each, then one of them steps onto START.
+- Challenges on the screen and their answers: 6 × 7 = 42 (watch the counters merge); 15 × 15 = 225, the biggest the floor can do; make 100 with two equal numbers: 10 × 10; 13 × 1 = 13, and its counters don't slide because they are already on the bottom row.
 
 ## Other work
 - 1593: *A Plaine Discovery of the Whole Revelation of Saint John*, a work of theology. In it he reckoned the Last Judgement would fall between 1688 and 1700. (Do not quote or repeat the book's polemics against other faiths.)
