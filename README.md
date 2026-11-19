@@ -1,7 +1,7 @@
 # napier-backend
 
 Backend for **Ask Napier**, the last station of *Making Calculation Visible* (51-265, fall 2026),
-at https://zhangyubooo.github.io/napier/ (zone `portrait`: six question rods set beneath Napier's portrait).
+at https://zhangyubooo.github.io/napier/ (zone `portrait`: Napier's portrait projected on a wall; visitors point at one of six question rods, or raise a hand and ask aloud).
 The zones `rods`, `promptuary` and `location` are from the earlier station screens and still work. It started as the backend for **Napier's Rod Box**
 (15-113 Project 2); those endpoints still work unchanged.
 
@@ -10,18 +10,20 @@ The project README and the prompt log live with the frontend:
 
 ## What it does
 
-A small Flask API. On each exhibit screen a visitor taps Napier's portrait and asks a suggested
-question or types their own; the server asks an LLM to answer as John Napier, from a fact sheet and
-a description of the station the visitor is standing at, and logs the question anonymously.
+A small Flask API. At the last station a visitor points at a question rod, or raises a hand and asks
+a question aloud (the recording comes to `/transcribe` and is written down by Whisper). The server
+asks an LLM to answer as John Napier, from a fact sheet and a description of the station the visitor
+is standing at, and logs the written question anonymously. Recordings are never stored.
 
 | Endpoint | Purpose |
 |---|---|
 | `GET /health` | Wake-up ping (Render's free tier sleeps) |
 | `POST /chat` `{zone, page?, preset, history?}` or `{zone, page?, question, history?}` | `{zone, reply, saved}` |
+| `POST /transcribe` multipart `audio` (webm/ogg/mp4/wav…, ≤ 3 MB) | `{text}` — Whisper (`whisper-large-v3-turbo`) on Groq writes down a spoken question; the audio is not stored |
 | `GET /visitor/<uuid>` | Legacy Rod Box: `{rods: [{card, inscription, motto}], counts: {"4": 12}}` |
 | `POST /ask` `{visitor_id, card}` | Legacy Rod Box: `{card, inscription, motto, repeat, count, saved}` |
 
-`zone` is `rods`, `promptuary` or `location`; `page` is the screen page the visitor is on (1-based;
+`zone` is `portrait` (the last station), or `rods`, `promptuary`, `location` (the earlier screens); `page` is the screen page the visitor is on (1-based;
 its title and contents from `zones.json` go into Napier's prompt); `preset` is a question id from
 `zones.json` (e.g. `r2`, or `ph3` for rod 15 page 3's hint question);
 `question` is the visitor's own text (cut to 200 characters); `history` is up to 6 earlier messages,
@@ -33,7 +35,7 @@ its title and contents from `zones.json` go into Napier's prompt); `preset` is a
 |---|---|
 | `app.py` | Endpoints, validation, rate limits, prompt building, Groq calls, JSON checking |
 | `storage.py` | Database tables and the operations app.py uses (incl. the anonymous `questions` log) |
-| `persona_chat.md` | System prompt for the exhibit chat: who Napier is, how he speaks, how to treat typed questions, JSON format |
+| `persona_chat.md` | System prompt for the exhibit chat: who Napier is, how he speaks, how to treat spoken or typed questions, JSON format |
 | `zones.json` | The three stations: what the visitor is looking at, each screen page (title + what it shows), and the suggested questions. Ids must match the frontend's `js/zones.js` |
 | `facts.md` | The fact sheet Napier may draw on (with sources) — shared by both versions |
 | `persona.md`, `cards.json` | Legacy Rod Box: persona and the sixteen rods |

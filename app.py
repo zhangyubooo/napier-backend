@@ -83,6 +83,20 @@ HISTORY_MAX_TURNS = 6        # earlier messages in this conversation sent back f
 HISTORY_MAX_CHARS = 500      # per earlier message
 REPLY_MAX_WORDS = 90         # persona asks for 70; this is the hard ceiling
 
+# --- Spoken questions (/transcribe) ------------------------------------------
+# The last station listens: a visitor raises a hand, speaks, lowers it. The browser
+# records that and sends it here; Whisper on Groq writes it down. The audio is never
+# stored, only the written question (when it is asked through /chat).
+WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "whisper-large-v3-turbo")
+AUDIO_MAX_BYTES = 3 * 1024 * 1024          # ~15 s of speech is far less than this
+AUDIO_TYPES = {"webm", "ogg", "mp4", "m4a", "mpeg", "mp3", "wav", "flac"}
+# Words that help Whisper spell what visitors ask about.
+WHISPER_PROMPT = ("A museum visitor asks John Napier a question about Napier's rods, Napier's bones, "
+                  "Rabdologia, the promptuary, location arithmetic, logarithms, Merchiston, Edinburgh.")
+# What Whisper tends to "hear" in silence or noise; treated as nothing said.
+WHISPER_PHANTOMS = {"", "you", "thank you", "thank you.", "thanks for watching", "thanks for watching!",
+                    "thank you for watching", "thank you for watching.", ".", "bye", "bye.", "谢谢", "谢谢观看"}
+
 
 def chat_system_prompt(zone, page=None):
     prompt = (CHAT_PERSONA + "\n\n# FACT SHEET\n\n" + FACTS
@@ -107,6 +121,7 @@ def zone_page(zone, number):
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)   # real visitor IP behind Render's proxy
+app.config["MAX_CONTENT_LENGTH"] = 4 * 1024 * 1024   # largest request: a spoken question
 CORS(app, origins=ALLOWED_ORIGINS)
 
 storage.init_db()
@@ -262,6 +277,7 @@ def index():
             "GET /health": "wake-up check",
             "GET /visitor/<id>": "rods already in this visitor's box",
             "POST /chat": "exhibit screens: {zone, page, preset} or {zone, page, question, history}",
+            "POST /transcribe": "a spoken question (multipart field 'audio') -> {text}",
             "POST /ask": "legacy Rod Box: present a rod: {visitor_id, card}",
         },
     })
@@ -480,9 +496,66 @@ def chat():
     return jsonify({"zone": zone["id"], "reply": reply, "saved": saved})
 
 
+def transcribe_audio(data, filename, mimetype):
+    """Whisper on Groq writes down a spoken question. Returns the text ('' if nothing was said)."""
+    if MOCK_AI:
+        return "(Mock transcript.) How did you come to invent the rods?"
+    try:
+        result = client.audio.transcriptions.create(
+            model=WHISPER_MODEL,
+            file=(filename, data, mimetype),
+            prompt=WHISPER_PROMPT,
+            response_format="json",
+            temperature=0,
+        )
+    except groq.APIStatusError as exc:
+        print(f"Groq API error {exc.status_code} (transcribe): {exc.message}")
+        raise RuntimeError("Napier could not hear that. Please try again.") from exc
+    except Exception as exc:
+        print(f"Unexpected error calling Groq (transcribe): {exc!r}")
+        raise RuntimeError("Napier could not hear that. Please try again.") from exc
+    text = " ".join((result.text or "").split())
+    return "" if text.lower().strip() in WHISPER_PHANTOMS else text[:QUESTION_MAX_CHARS]
+
+
+@app.post("/transcribe")
+def transcribe():
+    if is_rate_limited(request.remote_addr, _recent_chats, CHAT_RATE_LIMIT_REQUESTS):
+        response, status = error("Slowly, good visitor. Wait a moment before the next question.", 429)
+        response.headers["Retry-After"] = str(RATE_LIMIT_WINDOW)
+        return response, status
+
+    upload = request.files.get("audio")
+    if upload is None:
+        return error("Send the recording as the multipart field 'audio'.", 400)
+    data = upload.read(AUDIO_MAX_BYTES + 1)
+    if not data:
+        return error("The recording was empty.", 400)
+    if len(data) > AUDIO_MAX_BYTES:
+        return error("That recording is too long.", 413)
+    mimetype = (upload.mimetype or "audio/webm").split(";")[0]
+    kind = mimetype.split("/")[-1]
+    if kind not in AUDIO_TYPES:
+        return error("Napier cannot listen to that kind of recording.", 415)
+
+    if client is None and not MOCK_AI:
+        return error("The server is missing its API key.", 500)
+
+    try:
+        text = transcribe_audio(data, f"question.{'m4a' if kind == 'mp4' else kind}", mimetype)
+    except RuntimeError as exc:
+        return error(str(exc), 502)
+    return jsonify({"text": text})
+
+
 @app.errorhandler(404)
 def not_found(_):
     return error("Not found.", 404)
+
+
+@app.errorhandler(413)
+def too_large(_):
+    return error("That recording is too long.", 413)
 
 
 @app.errorhandler(405)

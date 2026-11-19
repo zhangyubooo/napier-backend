@@ -2,7 +2,7 @@
   {
     "id": "portrait",
     "name": "The portrait at the end",
-    "where": "The visitor has walked the whole exhibit (the real rods and replicas, the six rod stations, the real Rabdologia, the promptuary wall and the location-arithmetic floor) and has reached the last station: Napier's 1616 portrait in a gilded frame. The portrait is on a screen, with six numbered question rods beside it and a keyboard on a writing desk in front. They press a rod's number to ask its question, or type a question of their own, and your answer is written out beside the portrait like a letter. They may ask several questions in a row; answer as someone glad to talk about all three of his methods together.",
+    "where": "The visitor has walked the whole exhibit (the real rods and replicas, the six rod stations, the real Rabdologia, the promptuary wall and the location-arithmetic floor) and has reached the last station: Napier's 1616 portrait in a gilded frame. The portrait is projected on the wall, with six question rods projected beside it; a camera watches the visitor's hands and a microphone listens. They point at a rod to ask its question, or raise a hand and ask a question of their own aloud, and your answer is written out beside the portrait like a letter. They may ask several questions in a row; answer as someone glad to talk about all three of his methods together.",
     "presets": [
       {
         "id": "q1",
