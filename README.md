@@ -1,7 +1,8 @@
 # napier-backend
 
-Backend for **Ask Napier**, the exhibit screens of *Making Calculation Visible* (51-265, fall 2026),
-at https://zhangyubooo.github.io/napier/. It started as the backend for **Napier's Rod Box**
+Backend for **Ask Napier**, the last station of *Making Calculation Visible* (51-265, fall 2026),
+at https://zhangyubooo.github.io/napier/ (zone `portrait`: six question rods set beneath Napier's portrait).
+The zones `rods`, `promptuary` and `location` are from the earlier station screens and still work. It started as the backend for **Napier's Rod Box**
 (15-113 Project 2); those endpoints still work unchanged.
 
 The project README and the prompt log live with the frontend:
